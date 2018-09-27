@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <ul>
+        <li data-id="1" data-user-job="programmer">Juntae</li>
+        <li data-id="2" data-user-job="designer">nero</li>
+        <li data-id="3" data-user-job="programmer">hero</li>
+        <li data-id="4" data-user-job="ceo">kero</li>
+    </ul>
+    <script>
+    window.onload=function(){
+        console.log(document.querySelector('li').dataset);
+        //{ id : '1', userJob : 'programmer'}
+    }
+       
+    </script>
+</body>
+</html>
