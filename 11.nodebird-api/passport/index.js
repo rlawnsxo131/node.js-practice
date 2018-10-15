@@ -7,9 +7,9 @@ module.exports = (passport) => {
         done(null, user.id);
     });
 
-    passport.deserializeUser(async (id, done) => {
-       try {
-            const user = await User.find({
+    passport.deserializeUser( async (id, done) => {
+        try {
+            const user =  await User.find({
                 where: { id },
                 include: [{
                     model: User,
@@ -22,30 +22,10 @@ module.exports = (passport) => {
                 }],
             });
             done(null, user);
-       } catch (error) {
-           done(error);
-       }      
+        } catch (error) {
+            done(error);
+        }
     });
-
     local(passport);
     kakao(passport);
 };
-
-
-
-// passport.deserializeUser((id, done) => {
-//     User.find({
-//         where: { id },
-//         include: [{
-//             model: User,
-//             attributes: ['id', 'nick'],
-//             as: 'Followers',
-//         }, {
-//             model: User,
-//             attributes: ['id', 'nick'],
-//             as: 'Followings',
-//         }],
-//     })
-//     .then(user => done(null, user))
-//     .catch(err => done(err));
-// });
