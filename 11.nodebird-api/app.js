@@ -10,6 +10,7 @@ require('dotenv').config();
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
+const v1 = require('./routes/v1'); //추가
 const authRouter = require('./routes/auth');
 const indexRouter = require('./routes');
 
@@ -39,6 +40,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/v1',v1);//추가
 app.use('/auth', authRouter);
 app.use('/', indexRouter);
 
