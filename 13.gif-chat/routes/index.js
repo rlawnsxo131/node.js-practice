@@ -1,4 +1,7 @@
 const express = require('express');
+const multer = require('multer');//추가
+const path = require('path');//추가
+const fs = require('fs');//추가
 
 const Room = require('../schemas/room');
 const Chat = require('../schemas/chat');
@@ -19,6 +22,7 @@ router.get('/room', (req, res) => {
   res.render('room', { title: 'GIF 채팅방 생성' });
 });
 
+//채팅방 만들기
 router.post('/room', async (req, res, next) => {
   try {
     const room = new Room({
@@ -37,6 +41,7 @@ router.post('/room', async (req, res, next) => {
   }
 });
 
+//채팅방 렌더링
 router.get('/room/:id', async (req, res, next) => {
   try {
     const room = await Room.findOne({ _id: req.params.id });
@@ -67,6 +72,7 @@ router.get('/room/:id', async (req, res, next) => {
   }
 });
 
+//채팅방 삭제
 router.delete('/room/:id', async (req, res, next) => {
   try {
     await Room.remove({ _id: req.params.id });
@@ -81,12 +87,50 @@ router.delete('/room/:id', async (req, res, next) => {
   }
 });
 
+//채팅 전송
 router.post('/room/:id/chat', async (req, res, next) => { //추가
   try {
     const chat = new Chat({
       room: req.params.id,
       user: req.session.color,
       chat: req.body.chat
+    });
+    await chat.save();
+    req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat);
+    res.send('ok');
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+//이미지 업로드
+fs.readdir('uploads', (error) => {
+  if(error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+  }
+});
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename(req, file, cb) {
+      const ext= path.extname(file.originalname);
+      cb(null, path.basename(file.originalname, ext) + new Date().valueOf() + ext);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+
+router.post('/room/:id/gif', upload.single('gif'), async (req, res, next) => {
+  try {
+    const chat = new Chat({
+      room: req.params.id,
+      user: req.session.color,
+      gif: req.file.filename,
     });
     await chat.save();
     req.app.get('io').of('/chat').to(req.params.id).emit('chat',chat);

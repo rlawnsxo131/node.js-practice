@@ -35,15 +35,17 @@ block content
       path: '/socket.io'
     });
 
+    //채팅방 입장 알림
     socket.on('join', function (data) {
       var div = document.createElement('div');
       div.classList.add('system');
       var chat = document.createElement('div');
-      div.textContent = data.chat;
+      div.textContent = data.chat + data.member;
       div.appendChild(chat);
       document.querySelector('#chat-list').appendChild(div);
     });
 
+    //채팅방 퇴장 알림
     socket.on('exit', function (data) {
       var div = document.createElement('div');
       div.classList.add('system');
@@ -53,6 +55,7 @@ block content
       document.querySelector('#chat-list').appendChild(div);
     });
 
+    //채팅 내용 렌더링(구분)
     socket.on('chat', function (data) {
       var div = document.createElement('div');
       if (data.user === '#{user}') {
@@ -76,6 +79,7 @@ block content
       document.querySelector('#chat-list').appendChild(div);
     });
     
+    //채팅 전송
     document.querySelector('#chat-form').addEventListener('submit', function (e) {
       e.preventDefault();
       if (e.target.chat.value) {
@@ -91,5 +95,22 @@ block content
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({ chat: this.chat.value }));
       }
+    });
+
+    //이미지 전송
+    document.querySelector('#gif').addEventListener('change', function(e) {
+      var formData = new FormData();
+      var xhr = new XMLHttpRequest();
+      console.log(e.target.data);
+      formData.append('gif', e.target.files[0]);
+      xhr.onload = function() {
+        if(xhr.status === 200) {
+          e.target.file = null;
+        } else {
+          console.error(xhr.responseText);
+        }
+      };
+      xhr.open('POST', '/room/#{room._id}/gif');
+      xhr.send(formData);
     });
 

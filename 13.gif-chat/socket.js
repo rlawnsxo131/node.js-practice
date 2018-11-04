@@ -27,11 +27,14 @@ module.exports = (server, app, sessionMiddleware) => { //수정
             .split('/')[referer.split('/').length-1]
             .replace(/\?.+/, '');
         socket.join(roomId);
+        const member = socket.adapter.rooms[roomId].length;
+
         
         //추가
         socket.to(roomId).emit('join', {
             user: 'system',
-            chat: `${req.session.color}님이 입장하셨습니다.`
+            chat: `${req.session.color}님이 입장하셨습니다.`,
+            member: `현재 총 ${member}명 참여중 입니다.`
         });
         
         socket.on('disconnect', () => {
