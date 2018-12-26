@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => (
   sequelize.define('good', {
     name: {
-      type: DataTypes.STRINg(40),
+      type: DataTypes.STRING(40),
       allowNull: false,
     },
     img: {
