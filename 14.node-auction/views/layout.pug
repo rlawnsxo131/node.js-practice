@@ -7,6 +7,7 @@ html
     meta(http-equiv='X-UA-Compatible' content='IE=edge')
     link(rel='stylesheet' href='/main.css')
   body
+    a(href='/') 메인으로
     .container
       .profile-wrap
         .profile
@@ -16,6 +17,7 @@ html
             input#my-id(type='hidden' value=user.id)
             a#logout.btn(href='/auth/logout') 로그아웃
             a#register.btn(href='/good') 상품 등록
+            a#list.btn(href='/list') 낙찰 내역
           else
             form#login-form(action='/auth/login' method='post')
               .input-group
