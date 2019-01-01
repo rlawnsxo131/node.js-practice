@@ -9,6 +9,11 @@
   "author": "Juntae",
   "license": "ISC",
   "bin": {
-    "cli": "./template.js"
+    "cli": "./command.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "inquirer": "^6.2.1"
   }
 }
