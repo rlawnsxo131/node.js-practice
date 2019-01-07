@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
 
 const { Post, Hashtag, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
@@ -15,6 +17,23 @@ fs.readdir('uploads', (error) => {
   }
 });
 
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2'
+});
+
+const upload = multer({
+  storage: multerS3({
+    s3: new AWS.S3(),
+    bucket: 'junsnodebird',
+    key(req, file, cb) {
+      cb(null, `original/${+new Date()}${path.basename(file.originalname)}`);
+    }
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+/* 이전 코드
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
@@ -26,11 +45,14 @@ const upload = multer({
     },
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
-});
-
+}); */
 router.post('/img', isLoggedIn, upload.single('img'), (req, res) => {
   console.log(req.file);
-  res.json({ url: `/img/${req.file.filename}` });
+  const originalUrl = req.file.location;
+  const url = originalUrl.replace(/\/original\//, '/thumb/');
+  res.json({ url, originalUrl });
+  // 제일 처음 : res.json({ url: `/img/${req.file.filename}` });
+  // S3만 사용 : res.json({ url: req.file.location });
 });
 
 const upload2 = multer();
