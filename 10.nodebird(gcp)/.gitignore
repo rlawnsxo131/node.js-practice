@@ -1,0 +1,6 @@
+uploads
+*.log
+.env
+/config
+/node_modules
+node-depoly-fdfb88fd869e.json
