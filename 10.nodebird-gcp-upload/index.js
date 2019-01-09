@@ -3,7 +3,7 @@ const gm = require('gm').subClass({ imageMagick: true });
 
 exports.resizeAndUpload = (req, res) => {
   const { filename } = req.query;
-  const bucket = 'juns-node-deploy';
+  const bucket = 'juns_node_deploy';
   if (!filename) {
     res.sendStatus(500).send('파일 이름을 쿼리스트링에 넣어주세요.');
     return;

@@ -15,17 +15,19 @@ fs.readdir('uploads', (error) => {
     fs.mkdirSync('uploads');
   }
 });
+
 const upload = multer({
   storage: multerGoogleStorage.storageEngine({
-    bucket: 'node-deploy',
-    projectId: 'node-deploy-199015',
-    keyFilename: 'node-deploy-c1ce429ea8d6.json',
+    bucket: 'juns_node-depoly',
+    projectId: 'node-depoly-228016',
+    keyFilename: 'node-depoly-8d5c7c607702.json',
   }),
   limits: { fileSize: 5 * 1024 * 1024 },
 });
+
 router.post('/img', isLoggedIn, upload.single('img'), (req, res, next) => {
-  console.log('req.file:', req.file);
-  axios.get(`https://us-central1-node-depoly-227613.cloudfunctions.net/gcp-upload?filename=${req.file.filename}`)
+  console.log(req.file);
+  axios.get(`https://asia-northeast1-node-depoly-228016.cloudfunctions.net/gcp-upload?filename=${req.file.filename}`)
     .then((response) => {
       const filePath = req.file.path.split('/').splice(0, 3).join('/');
       const originalUrl = `${filePath}/${req.file.filename}`;
