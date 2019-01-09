@@ -18,7 +18,7 @@ fs.readdir('uploads', (error) => {
 
 const upload = multer({
   storage: multerGoogleStorage.storageEngine({
-    bucket: 'juns_node-depoly',
+    bucket: 'juns_node_depoly',
     projectId: 'node-depoly-228016',
     keyFilename: 'node-depoly-8d5c7c607702.json',
   }),
