@@ -34,5 +34,5 @@ var bool = array[array.length-1];
 
 const array = ['node.js', {}, 10, true];
 const [node, obj, , bool] = array;
-
+console.log(node, obj, bool);
 
